@@ -8,14 +8,14 @@
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="The Clockwork Menace of Oakhaven">
     <meta property="og:description" content="A complete, self-contained D&D 5E (2024 Rules) One-Shot Adventure with a built-in Combat Tracker.">
-    <meta property="og:image" content="https://private-user-images.githubusercontent.com/16816173/555569546-24bbbcbd-f301-4b17-8315-9494b0a2891b.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzIxMzQ3MzEsIm5iZiI6MTc3MjEzNDQzMSwicGF0aCI6Ii8xNjgxNjE3My81NTU1Njk1NDYtMjRiYmJjYmQtZjMwMS00YjE3LTgzMTUtOTQ5NGIwYTI4OTFiLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjAyMjYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwMjI2VDE5MzM1MVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWFhNzIyNTc0NTJiOTNkZjQ4OWIxMWM1NmY4YTMxY2ZmZmE1MTAxN2NlMzU3NWFkMjY2YTE2MDgzODE3MGM0ODkmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.28HBwSpvoUW4MY-Kkkus1FqBktPWvRmsnGY4JxLXj0I">
+    <meta property="og:image" content="https://i.imgur.com/3KooKJI.png">
     <meta property="og:type" content="website">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="The Clockwork Menace of Oakhaven">
     <meta name="twitter:description" content="A complete, self-contained D&D 5E (2024 Rules) One-Shot Adventure with a built-in Combat Tracker.">
-    <meta name="twitter:image" content="https://private-user-images.githubusercontent.com/16816173/555569546-24bbbcbd-f301-4b17-8315-9494b0a2891b.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzIxMzQ3MzEsIm5iZiI6MTc3MjEzNDQzMSwicGF0aCI6Ii8xNjgxNjE3My81NTU1Njk1NDYtMjRiYmJjYmQtZjMwMS00YjE3LTgzMTUtOTQ5NGIwYTI4OTFiLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjAyMjYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwMjI2VDE5MzM1MVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWFhNzIyNTc0NTJiOTNkZjQ4OWIxMWM1NmY4YTMxY2ZmZmE1MTAxN2NlMzU3NWFkMjY2YTE2MDgzODE3MGM0ODkmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.28HBwSpvoUW4MY-Kkkus1FqBktPWvRmsnGY4JxLXj0I">
+    <meta name="twitter:image" content="https://i.imgur.com/3KooKJI.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -80,10 +80,20 @@
             <div class="text-center sm:text-left">
                 <h1 class="text-3xl font-bold text-[#fdfbf7]">The Clockwork Menace of Oakhaven</h1>
                 <p class="text-sm opacity-80 mt-1 font-sans">A 5E (2024) One-Shot for Level 3 Characters (~3 Hours)</p>
+                <button onclick="toggleDataModal()" class="text-xs text-[#d4af37] mt-1 font-sans font-bold flex items-center justify-center sm:justify-start gap-1 hover:text-white transition group focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+                    Progress is auto-saved locally 
+                    <span class="bg-[#d4af37] text-[#5c1a06] rounded-full w-4 h-4 inline-flex items-center justify-center text-[10px] ml-1 group-hover:bg-white transition">?</span>
+                </button>
             </div>
-            <button onclick="togglePartyManager()" class="bg-[#d4af37] text-[#5c1a06] px-4 py-2 rounded font-bold shadow hover:bg-[#b8952d] transition w-full sm:w-auto">
-                Manage Party
-            </button>
+            <div class="flex gap-2 w-full sm:w-auto">
+                <button onclick="resetData()" class="bg-red-700 text-white px-4 py-2 rounded font-bold shadow hover:bg-red-800 transition w-full sm:w-auto text-sm border border-red-900">
+                    Reset Data
+                </button>
+                <button onclick="togglePartyManager()" class="bg-[#d4af37] text-[#5c1a06] px-4 py-2 rounded font-bold shadow hover:bg-[#b8952d] transition w-full sm:w-auto">
+                    Manage Party
+                </button>
+            </div>
         </div>
     </header>
 
@@ -211,6 +221,28 @@
         </div>
     </main>
 
+    <!-- DATA INFO MODAL -->
+    <div id="data-info-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-50 px-4 backdrop-blur-sm transition-opacity" onclick="if(event.target === this) toggleDataModal()">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl font-sans relative">
+            <button onclick="toggleDataModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <h3 class="text-2xl font-bold text-[#5c1a06] mb-3 font-serif border-b border-gray-200 pb-2">Storage & Privacy</h3>
+            <p class="mb-3 text-sm text-gray-700">To make running your game seamless, this application automatically saves your progress. Here is exactly what is stored:</p>
+            <ul class="list-disc pl-5 mb-4 text-sm text-gray-700 space-y-1">
+                <li><strong>Party Stats:</strong> Character names, AC, Max HP, and Initiative modifiers.</li>
+                <li><strong>Combat State:</strong> Current HP, spell slots, typed conditions, and turn order.</li>
+            </ul>
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-3 mb-6 rounded-r">
+                <p class="text-sm text-blue-800"><strong>Privacy First:</strong> All data is stored entirely offline in your browser's local memory (LocalStorage). <strong>Absolutely no data is sent to the internet or any external servers.</strong></p>
+            </div>
+            <div class="flex flex-col sm:flex-row justify-end gap-2">
+                <button onclick="resetData()" class="bg-red-100 text-red-800 px-4 py-2 rounded hover:bg-red-200 transition text-sm font-semibold border border-red-200">Wipe All Data</button>
+                <button onclick="toggleDataModal()" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 transition text-sm font-semibold shadow">Got it</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT LOGIC -->
     <script>
         // --- UTILITY ---
@@ -283,6 +315,54 @@
             }
         };
 
+        // --- DATA PERSISTENCE (Cookies/Local Storage) ---
+        function saveData() {
+            if (currentCombat) {
+                encounterStates[currentCombat.id] = currentCombat;
+            }
+            const dataToSave = {
+                party: party,
+                encounterStates: encounterStates,
+                activeEncounterId: currentCombat ? currentCombat.id : null
+            };
+            localStorage.setItem('oakhavenSaveData', JSON.stringify(dataToSave));
+        }
+
+        function loadData() {
+            const savedData = localStorage.getItem('oakhavenSaveData');
+            if (savedData) {
+                try {
+                    const parsed = JSON.parse(savedData);
+                    if (parsed.party) party = parsed.party;
+                    if (parsed.encounterStates) encounterStates = parsed.encounterStates;
+                    
+                    if (parsed.activeEncounterId && encounterStates[parsed.activeEncounterId]) {
+                        currentCombat = encounterStates[parsed.activeEncounterId];
+                        const container = document.getElementById('tracker-' + currentCombat.id);
+                        if (container) {
+                            container.classList.remove('hidden');
+                            renderCombatTracker();
+                        }
+                    }
+                } catch (e) {
+                    console.error("Failed to parse saved adventure data.", e);
+                }
+            }
+            renderParty();
+        }
+
+        function resetData() {
+            if (confirm("Are you sure you want to reset all data? This will clear your party and wipe all combat progress.")) {
+                localStorage.removeItem('oakhavenSaveData');
+                location.reload(); // Hard refresh to default state
+            }
+        }
+
+        // --- UI MODALS ---
+        function toggleDataModal() {
+            const modal = document.getElementById('data-info-modal');
+            modal.classList.toggle('hidden');
+        }
 
         // --- PARTY MANAGEMENT ---
         function togglePartyManager() {
@@ -333,6 +413,7 @@
             document.getElementById('new-pc-init').value = '';
 
             renderParty();
+            saveData(); // Save changes
         }
 
         function removePartyMember(id) {
@@ -346,6 +427,7 @@
             }
             
             renderParty();
+            saveData(); // Save changes
         }
 
         function renderParty() {
@@ -449,6 +531,7 @@
 
             renderCombatTracker();
             container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            saveData(); // Save new active state
         }
 
         function rollMonsterInit() {
@@ -464,6 +547,7 @@
                 }
             });
             renderCombatTracker();
+            saveData(); // Save rolls
         }
 
         function sortInitiative() {
@@ -482,6 +566,7 @@
             currentCombat.turnIndex = 0;
             if (!currentCombat.round) currentCombat.round = 1;
             renderCombatTracker();
+            saveData(); // Save sort order
         }
 
         function nextTurn() {
@@ -494,6 +579,7 @@
                 currentCombat.round++;
             }
             renderCombatTracker();
+            saveData(); // Save turn progression
         }
 
         function modifyHp(id, amount) {
@@ -515,6 +601,7 @@
                     }
                 }
             }
+            saveData(); // Save HP changes immediately
         }
 
         function customDamageHeal(id) {
@@ -538,6 +625,7 @@
                 const slotInput = document.getElementById(`slots-${currentCombat.id}-${p.id}`);
                 if (slotInput) p.slots = slotInput.value;
             });
+            saveData(); // Hooking this here ensures any manual typing is saved on blur
         }
 
         function toggleStats(id) {
@@ -547,6 +635,7 @@
             
             const el = document.getElementById(`stats-${currentCombat.id}-${id}`);
             if(el) el.classList.toggle('hidden');
+            saveData(); // Save UI state
         }
 
         function renderCombatTracker() {
@@ -649,9 +738,9 @@
             });
         }
 
-        renderParty();
+        // Initialize by checking for saved data first
+        window.onload = loadData;
 
     </script>
 </body>
 </html>
-
