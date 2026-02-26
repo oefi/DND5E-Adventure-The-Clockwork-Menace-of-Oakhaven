@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Clockwork Menace of Oakhaven</title>
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="The Clockwork Menace of Oakhaven">
+    <meta property="og:description" content="A complete, self-contained D&D 5E (2024 Rules) One-Shot Adventure with a built-in Combat Tracker.">
+    <meta property="og:image" content="https://private-user-images.githubusercontent.com/16816173/555569546-24bbbcbd-f301-4b17-8315-9494b0a2891b.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzIxMzQyNjUsIm5iZiI6MTc3MjEzMzk2NSwicGF0aCI6Ii8xNjgxNjE3My81NTU1Njk1NDYtMjRiYmJjYmQtZjMwMS00YjE3LTgzMTUtOTQ5NGIwYTI4OTFiLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjAyMjYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwMjI2VDE5MjYwNVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTgxZWQwNjE4YTE2NDIyMWZlMGQ4Y2E3OGI2MzdkZjgyMDQyNTkxMWZkNjdlNjE1NzJkNmExZGJiNTY1NDBhNjEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.ioP96_kCUHG8ZxP4cq_7yxVH_camutR02jfgMD36UnA">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Clockwork Menace of Oakhaven">
+    <meta name="twitter:description" content="A complete, self-contained D&D 5E (2024 Rules) One-Shot Adventure with a built-in Combat Tracker.">
+    <meta name="twitter:image" content="https://private-user-images.githubusercontent.com/16816173/555569546-24bbbcbd-f301-4b17-8315-9494b0a2891b.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzIxMzQyNjUsIm5iZiI6MTc3MjEzMzk2NSwicGF0aCI6Ii8xNjgxNjE3My81NTU1Njk1NDYtMjRiYmJjYmQtZjMwMS00YjE3LTgzMTUtOTQ5NGIwYTI4OTFiLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjAyMjYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwMjI2VDE5MjYwNVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTgxZWQwNjE4YTE2NDIyMWZlMGQ4Y2E3OGI2MzdkZjgyMDQyNTkxMWZkNjdlNjE1NzJkNmExZGJiNTY1NDBhNjEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.ioP96_kCUHG8ZxP4cq_7yxVH_camutR02jfgMD36UnA">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
@@ -441,7 +454,7 @@
         function rollMonsterInit() {
             saveInputState();
             currentCombat.participants.forEach(p => {
-                // BUGFIX: Only roll for monsters that DON'T already have a valid number inputted.
+                // BUGFIX: Only roll for monsters that DONT already have a valid number inputted.
                 // This prevents wiping a DM's manual adjustments.
                 if (p.type === 'monster') {
                     const currentInit = parseInt(p.initiative);
