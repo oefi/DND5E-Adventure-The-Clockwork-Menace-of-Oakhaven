@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Clockwork Menace of Oakhaven</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+        body {
+            font-family: 'Lora', serif;
+            background-color: #fdfbf7;
+            color: #2d2a26;
+        }
+        h1, h2, h3, h4, h5 {
+            font-family: 'Cinzel', serif;
+            color: #5c1a06;
+        }
+        .read-aloud {
+            background-color: #f4eee1;
+            border-left: 4px solid #d4af37;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            border-radius: 0 0.5rem 0.5rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .dm-note {
+            background-color: #e6f3ff;
+            border: 1px solid #b3d9ff;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+        }
+        .stat-block {
+            background-color: #fffaf0;
+            border: 2px solid #d4af37;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        }
+        .active-turn {
+            background-color: #fff3cd !important;
+            border-left: 4px solid #ffc107 !important;
+            transition: all 0.3s ease;
+        }
+        .tracker-row {
+            border-bottom: 1px solid #e2e8f0;
+            border-left: 4px solid transparent;
+        }
+        .tracker-row:last-child {
+            border-bottom: none;
+        }
+        .combat-container {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+    <!-- Header -->
+    <header class="bg-[#5c1a06] text-[#fdfbf7] py-6 shadow-md border-b-4 border-[#d4af37]">
+        <div class="max-w-5xl mx-auto px-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-[#fdfbf7]">The Clockwork Menace of Oakhaven</h1>
+                <p class="text-sm opacity-80 mt-1 font-sans">A 5E (2024) One-Shot for Level 3 Characters (~3 Hours)</p>
+            </div>
+            <button onclick="togglePartyManager()" class="bg-[#d4af37] text-[#5c1a06] px-4 py-2 rounded font-bold shadow hover:bg-[#b8952d] transition">
+                Manage Party
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left/Main Column: Adventure Text -->
+        <div class="lg:col-span-12" id="adventure-content">
+            
+            <!-- PARTY MANAGER SECTION -->
+            <section id="party-manager" class="bg-white p-6 rounded-lg shadow-md mb-8 border border-gray-200 hidden">
+                <h2 class="text-2xl mb-4 border-b pb-2">Party Setup</h2>
+                <p class="text-sm text-gray-600 mb-4 font-sans">Add your players here. They will be dynamically imported into active combat encounters.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse font-sans mb-4">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="p-2 border">Character Name</th>
+                                <th class="p-2 border w-24">AC</th>
+                                <th class="p-2 border w-24">Max HP</th>
+                                <th class="p-2 border w-24">Init Mod</th>
+                                <th class="p-2 border">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="party-list">
+                            <!-- Party members rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="flex gap-2 font-sans">
+                    <input type="text" id="new-pc-name" placeholder="Name" class="border p-2 rounded flex-grow">
+                    <input type="number" id="new-pc-ac" placeholder="AC" class="border p-2 rounded w-20" min="1">
+                    <input type="number" id="new-pc-hp" placeholder="Max HP" class="border p-2 rounded w-24" min="1">
+                    <input type="number" id="new-pc-init" placeholder="Init (+)" class="border p-2 rounded w-20">
+                    <button onclick="addPartyMember()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add PC</button>
+                </div>
+            </section>
+
+            <!-- ADVENTURE START -->
+            <section class="mb-10">
+                <h2 class="text-3xl mb-4 border-b-2 border-[#d4af37] inline-block pr-8">Adventure Overview</h2>
+                <p class="mb-4"><strong>Setting:</strong> The quiet logging village of Oakhaven.</p>
+                <p class="mb-4"><strong>The Hook:</strong> Silas, the village tinkerer, hasn't been seen in a week. Last night, strange mechanical dogs attacked the local tavern. The mayor is offering 150 GP for anyone who can investigate Silas's workshop and stop the machines.</p>
+                
+                <div class="dm-note font-sans">
+                    <strong>DM Info (2024 Rules Note):</strong> Remind players about their Weapon Masteries and the new Heroic Inspiration rules (they can spend it to reroll a die, and lose it upon long rest).
+                </div>
+            </section>
+
+            <section class="mb-10">
+                <h2 class="text-3xl mb-4 border-b-2 border-[#d4af37] inline-block pr-8">Act 1: Blood and Brass</h2>
+                <p class="mb-4">The party arrives in Oakhaven just as screams erupt from the village square. They see villagers fleeing from the local tavern, "The Rusty Axe".</p>
+                
+                <div class="read-aloud">
+                    "The heavy wooden doors of the Rusty Axe splinter outward. Three metallic beasts, resembling hounds made of rusted gears, spinning blades, and leaking oil, bound into the street. Their eyes glow with a baleful crimson light as they bare jagged, steel teeth."
+                </div>
+
+                <p class="mb-4"><strong>Investigation (DC 12 Intelligence/Investigation):</strong> A quick glance at the hounds reveals they are crude, as if assembled in a frantic hurry. They have a makers mark: an hourglass crossed with a wrench (Silas's sigil).</p>
+
+                <!-- ENCOUNTER 1 BUTTON -->
+                <div class="bg-red-50 border border-red-200 p-6 rounded-lg text-center my-6 shadow-sm">
+                    <h3 class="text-xl text-red-800 font-bold mb-2">Combat: The Scrap Hounds</h3>
+                    <p class="text-sm text-red-600 mb-4 font-sans">3x Malfunctioning Watchdogs</p>
+                    <button onclick="startEncounter('encounter1')" class="bg-red-700 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-red-800 hover:scale-105 transition transform font-sans">
+                        ⚔️ Start Encounter
+                    </button>
+                </div>
+
+                <!-- ENCOUNTER 1 TRACKER CONTAINER -->
+                <div id="tracker-encounter1" class="hidden bg-white border-2 border-red-800 rounded-lg shadow-xl p-4 my-6 font-sans">
+                    <!-- Dynamic Combat UI will be injected here -->
+                </div>
+
+                <p class="mb-4">After the hounds are defeated, Mayor Thackery approaches the party, offering the 150 GP reward. He points them toward Silas's workshop on the edge of the woods.</p>
+            </section>
+
+            <section class="mb-10">
+                <h2 class="text-3xl mb-4 border-b-2 border-[#d4af37] inline-block pr-8">Act 2: The Tinkerer's Workshop</h2>
+                <div class="read-aloud">
+                    "Silas’s workshop is a stout stone building with a chimney belching black smoke. The heavy iron front door is shut tight. A complex mechanism of interlocking brass rings covers the keyhole, slowly ticking."
+                </div>
+                
+                <h3 class="text-xl mt-4 font-bold">The Gear Lock Puzzle</h3>
+                <p class="mb-2">The door is magically and mechanically sealed. The rings must be aligned. Above the rings is an inscription:</p>
+                <div class="bg-gray-100 p-4 font-serif italic text-center text-lg my-2 border border-gray-300">
+                    "I run but have no legs. I cannot be seen, but I alter everything. What am I?"
+                </div>
+                
+                <ul class="list-disc pl-6 mb-4 space-y-2">
+                    <li><strong>The Answer:</strong> Time.</li>
+                    <li><strong>Action:</strong> A player must speak the word "Time" out loud, or turn the rings to form an hourglass shape.</li>
+                    <li><strong>Skill Check Alternative:</strong> A player can attempt to pick the lock <strong>(DC 15 Dexterity / Thieves' Tools)</strong> or deduce the mechanism <strong>(DC 14 Intelligence / Arcana)</strong>.</li>
+                    <li><strong>Failure/Trap:</strong> If they guess wrong twice or fail the check by 5 or more, the door vents scalding steam in a 10-foot cone. <strong>DC 13 Dexterity saving throw</strong>, taking 2d6 fire damage on a failed save, or half as much on a successful one.</li>
+                </ul>
+            </section>
+
+            <section class="mb-10">
+                <h2 class="text-3xl mb-4 border-b-2 border-[#d4af37] inline-block pr-8">Act 3: The Assembly Line</h2>
+                <p class="mb-4">Inside, the workshop is a chaotic mess of blueprints, scattered tools, and half-finished automatons. At the back of the room, Silas lies dead on the floor, a wrench clutched in his cold hand. Towering over him is his masterpiece gone wrong.</p>
+
+                <div class="read-aloud">
+                    "A hulking automaton made of polished bronze and steel turns toward you. Its chest cavity glows with volatile blue arcane energy. Around it, two smaller, spider-like machines are busily welding scrap metal together, turning toward you with hostile clicks."
+                </div>
+
+                <!-- ENCOUNTER 2 BUTTON -->
+                <div class="bg-red-50 border border-red-200 p-6 rounded-lg text-center my-6 shadow-sm">
+                    <h3 class="text-xl text-red-800 font-bold mb-2">Boss Combat: The Clockwork King</h3>
+                    <p class="text-sm text-red-600 mb-4 font-sans">1x Clockwork Overseer, 2x Mending Drones</p>
+                    <button onclick="startEncounter('encounter2')" class="bg-red-700 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-red-800 hover:scale-105 transition transform font-sans">
+                        ⚔️ Start Final Encounter
+                    </button>
+                </div>
+
+                <!-- ENCOUNTER 2 TRACKER CONTAINER -->
+                <div id="tracker-encounter2" class="hidden bg-white border-2 border-red-800 rounded-lg shadow-xl p-4 my-6 font-sans">
+                    <!-- Dynamic Combat UI will be injected here -->
+                </div>
+
+                <h3 class="text-xl mt-6 font-bold">Conclusion</h3>
+                <p class="mb-4">With the Overseer destroyed, the arcane energy dissipates. The remaining machines in the village shut down. The party can safely loot Silas's body and workshop.</p>
+                <p><strong>Treasure:</strong> A pouch with 50 GP, a <em>Goggles of Night</em>, and a unique magic item: <strong>The Clockwork Heart</strong> (Wondrous Item, requires attunement. As an Action, you can cast <em>Mending</em>. Once per dawn, you can use a Bonus Action to gain 1d8+2 temporary hit points).</p>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- UTILITY ---
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.toString().replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[tag] || tag));
+        }
+
+        // --- DATA STATE ---
+        let party = [
+            { id: 'pc_1', currentName: 'Valeria (Fighter)', type: 'pc', ac: 16, maxHp: 28, hp: 28, initMod: 2, conditions: '', slots: '' },
+            { id: 'pc_2', currentName: 'Eldon (Wizard)', type: 'pc', ac: 12, maxHp: 17, hp: 17, initMod: 1, conditions: '', slots: '' },
+            { id: 'pc_3', currentName: 'Thia (Rogue)', type: 'pc', ac: 15, maxHp: 21, hp: 21, initMod: 3, conditions: '', slots: '' }
+        ];
+        
+        // Cache object to securely preserve encounters when switching between them
+        let encounterStates = {}; 
+        let currentCombat = null; 
+
+        // Monster Database
+        const monsterDB = {
+            "Watchdog": {
+                name: "Malfunctioning Watchdog", type: "monster", maxHp: 22, ac: 13, initMod: +2,
+                stats: `
+                    <strong>Speed:</strong> 40 ft. | <strong>STR</strong> 14 (+2) <strong>DEX</strong> 15 (+2) <strong>CON</strong> 12 (+1)<br>
+                    <strong>Immunities:</strong> Poison, Psychic, Charmed, Exhaustion.<br>
+                    <strong>Action - Bite:</strong> Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6+2) piercing damage.<br>
+                    <strong>Trait - Pounce:</strong> If the watchdog moves at least 20 ft. straight toward a creature and then hits it with a bite attack on the same turn, the target must succeed on a DC 12 Strength saving throw or be knocked Prone.
+                `
+            },
+            "Overseer": {
+                name: "Clockwork Overseer", type: "monster", maxHp: 55, ac: 16, initMod: -1,
+                stats: `
+                    <strong>Speed:</strong> 20 ft. | <strong>STR</strong> 18 (+4) <strong>DEX</strong> 8 (-1) <strong>CON</strong> 16 (+3)<br>
+                    <strong>Immunities:</strong> Poison, Psychic, Blinded, Charmed, Exhaustion, Frightened.<br>
+                    <strong>Action - Multiattack:</strong> The Overseer makes two Slam attacks.<br>
+                    <strong>Action - Slam:</strong> Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 8 (1d8+4) bludgeoning damage.<br>
+                    <strong>Action - Overcharge (Recharge 5-6):</strong> The Overseer vents arcane energy. Each creature within 10 ft must make a DC 13 Dex saving throw, taking 14 (4d6) lightning damage on a failed save, or half on success.
+                `
+            },
+            "Drone": {
+                name: "Mending Drone", type: "monster", maxHp: 10, ac: 11, initMod: +3,
+                stats: `
+                    <strong>Speed:</strong> 30 ft., climb 30 ft. | <strong>STR</strong> 6 (-2) <strong>DEX</strong> 16 (+3) <strong>CON</strong> 10 (+0)<br>
+                    <strong>Immunities:</strong> Poison, Psychic.<br>
+                    <strong>Action - Zap:</strong> Ranged Spell Attack: +5 to hit, range 30 ft., one target. Hit: 3 (1d4+1) lightning damage.<br>
+                    <strong>Action - Repair (1/Day):</strong> The drone touches a construct. It magically regains 5 (1d4+3) hit points.
+                `
+            }
+        };
+
+        const encounters = {
+            "encounter1": {
+                title: "Combat: The Scrap Hounds",
+                monsters: [
+                    { ...monsterDB["Watchdog"], id: "m1", currentName: "Watchdog A" },
+                    { ...monsterDB["Watchdog"], id: "m2", currentName: "Watchdog B" },
+                    { ...monsterDB["Watchdog"], id: "m3", currentName: "Watchdog C" }
+                ]
+            },
+            "encounter2": {
+                title: "Boss: The Clockwork King",
+                monsters: [
+                    { ...monsterDB["Overseer"], id: "m1", currentName: "Clockwork Overseer" },
+                    { ...monsterDB["Drone"], id: "m2", currentName: "Drone 1" },
+                    { ...monsterDB["Drone"], id: "m3", currentName: "Drone 2" }
+                ]
+            }
+        };
+
+
+        // --- PARTY MANAGEMENT ---
+        function togglePartyManager() {
+            const el = document.getElementById('party-manager');
+            el.classList.toggle('hidden');
+            renderParty();
+        }
+
+        function addPartyMember() {
+            const name = document.getElementById('new-pc-name').value.trim();
+            let ac = parseInt(document.getElementById('new-pc-ac').value);
+            let hp = parseInt(document.getElementById('new-pc-hp').value);
+            const init = parseInt(document.getElementById('new-pc-init').value) || 0;
+
+            if (!name || isNaN(ac) || isNaN(hp)) {
+                alert("Please fill in a valid Name, AC, and Max HP.");
+                return;
+            }
+            
+            // Bulletproof clamps
+            ac = Math.max(0, ac);
+            hp = Math.max(1, hp);
+
+            const newPc = {
+                id: 'pc_' + Date.now(),
+                currentName: name,
+                type: 'pc',
+                ac: ac,
+                maxHp: hp,
+                hp: hp,
+                initMod: init,
+                conditions: '',
+                slots: ''
+            };
+
+            party.push(newPc);
+
+            // Live Sync: If an encounter is active, inject the new PC immediately
+            if (currentCombat) {
+                saveInputState();
+                currentCombat.participants.push({ ...newPc, initiative: '' });
+                renderCombatTracker();
+            }
+
+            document.getElementById('new-pc-name').value = '';
+            document.getElementById('new-pc-ac').value = '';
+            document.getElementById('new-pc-hp').value = '';
+            document.getElementById('new-pc-init').value = '';
+
+            renderParty();
+        }
+
+        function removePartyMember(id) {
+            party = party.filter(pc => pc.id !== id);
+            
+            // Live Sync: Immediately pull them from the active combat board
+            if (currentCombat) {
+                saveInputState();
+                currentCombat.participants = currentCombat.participants.filter(p => p.id !== id);
+                renderCombatTracker();
+            }
+            
+            renderParty();
+        }
+
+        function renderParty() {
+            const tbody = document.getElementById('party-list');
+            tbody.innerHTML = '';
+            party.forEach(pc => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-2 border font-bold" style="word-break: break-word;">${escapeHTML(pc.currentName)}</td>
+                        <td class="p-2 border text-center">${pc.ac}</td>
+                        <td class="p-2 border text-center">${pc.maxHp}</td>
+                        <td class="p-2 border text-center">${pc.initMod >= 0 ? '+'+pc.initMod : pc.initMod}</td>
+                        <td class="p-2 border text-center">
+                            <button onclick="removePartyMember('${pc.id}')" class="text-red-600 hover:text-red-800">Remove</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            if(party.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500 italic">No party members added yet.</td></tr>`;
+            }
+        }
+
+
+        // --- COMBAT ENGINE ---
+
+        function startEncounter(encounterId) {
+            // 1. Sync global state and save the CURRENT encounter to memory before swapping
+            if (currentCombat) {
+                saveInputState(); 
+                
+                // Propagate PC status changes back to global party array
+                currentCombat.participants.forEach(p => {
+                    if (p.type === 'pc') {
+                        const partyPc = party.find(member => member.id === p.id);
+                        if (partyPc) {
+                            partyPc.hp = p.hp;
+                            partyPc.conditions = p.conditions;
+                            partyPc.slots = p.slots;
+                        }
+                    }
+                });
+                
+                // Freeze and cache the exact state of the board
+                encounterStates[currentCombat.id] = currentCombat;
+            }
+
+            // Hide all trackers visually
+            document.querySelectorAll('[id^="tracker-"]').forEach(el => el.classList.add('hidden'));
+            
+            const container = document.getElementById('tracker-' + encounterId);
+            container.classList.remove('hidden');
+
+            // 2. Load from memory OR generate fresh
+            if (encounterStates[encounterId]) {
+                // Resume previously started encounter
+                currentCombat = encounterStates[encounterId];
+                
+                // Re-sync PCs from the global array in case they took damage in a different encounter!
+                currentCombat.participants.forEach(p => {
+                    if (p.type === 'pc') {
+                        const globalPc = party.find(member => member.id === p.id);
+                        if (globalPc) {
+                            p.hp = globalPc.hp;
+                            p.conditions = globalPc.conditions;
+                            p.slots = globalPc.slots;
+                        }
+                    }
+                });
+                
+            } else {
+                // Generate a fresh encounter
+                const encounterData = encounters[encounterId];
+                currentCombat = {
+                    id: encounterId,
+                    participants: [],
+                    turnIndex: -1,
+                    round: 1
+                };
+
+                // Inject persistent PCs
+                party.forEach(pc => {
+                    currentCombat.participants.push({
+                        ...pc,
+                        initiative: '' 
+                    });
+                });
+
+                // Inject fresh monsters
+                encounterData.monsters.forEach(m => {
+                    currentCombat.participants.push({
+                        ...m,
+                        hp: m.maxHp,
+                        initiative: '',
+                        conditions: '',
+                        slots: '',
+                        statsExpanded: false
+                    });
+                });
+            }
+
+            renderCombatTracker();
+            container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function rollMonsterInit() {
+            saveInputState();
+            currentCombat.participants.forEach(p => {
+                // BUGFIX: Only roll for monsters that DON'T already have a valid number inputted.
+                // This prevents wiping a DM's manual adjustments.
+                if (p.type === 'monster') {
+                    const currentInit = parseInt(p.initiative);
+                    if (isNaN(currentInit)) {
+                        p.initiative = Math.floor(Math.random() * 20) + 1 + p.initMod;
+                    }
+                }
+            });
+            renderCombatTracker();
+        }
+
+        function sortInitiative() {
+            saveInputState();
+
+            currentCombat.participants.sort((a, b) => {
+                const valA = parseInt(a.initiative);
+                const valB = parseInt(b.initiative);
+                const initA = isNaN(valA) ? -999 : valA;
+                const initB = isNaN(valB) ? -999 : valB;
+                
+                if (initB !== initA) return initB - initA;
+                return (b.initMod || 0) - (a.initMod || 0); 
+            });
+
+            currentCombat.turnIndex = 0;
+            if (!currentCombat.round) currentCombat.round = 1;
+            renderCombatTracker();
+        }
+
+        function nextTurn() {
+            if (currentCombat.turnIndex === -1) return;
+            saveInputState();
+
+            currentCombat.turnIndex++;
+            if (currentCombat.turnIndex >= currentCombat.participants.length) {
+                currentCombat.turnIndex = 0;
+                currentCombat.round++;
+            }
+            renderCombatTracker();
+        }
+
+        function modifyHp(id, amount) {
+            const participant = currentCombat.participants.find(p => p.id === id);
+            if (participant) {
+                participant.hp += amount;
+                if (participant.hp > participant.maxHp) participant.hp = participant.maxHp;
+                // No lower bounds clamp - tracking negative HP is an allowed DM use-case for massive damage calculations.
+                
+                const hpText = document.getElementById(`hp-text-${currentCombat.id}-${id}`);
+                if (hpText) hpText.innerText = `${participant.hp} / ${participant.maxHp}`;
+                
+                const row = document.getElementById(`row-${currentCombat.id}-${id}`);
+                if (row) {
+                    if (participant.hp <= 0) {
+                        row.classList.add('opacity-50', 'bg-red-50');
+                    } else {
+                        row.classList.remove('opacity-50', 'bg-red-50');
+                    }
+                }
+            }
+        }
+
+        function customDamageHeal(id) {
+            const input = document.getElementById(`hp-input-${currentCombat.id}-${id}`);
+            const val = parseInt(input.value);
+            if (!isNaN(val)) {
+                modifyHp(id, -val); 
+                input.value = '';
+            }
+        }
+
+        function saveInputState() {
+            if (!currentCombat) return;
+            currentCombat.participants.forEach(p => {
+                const initInput = document.getElementById(`init-${currentCombat.id}-${p.id}`);
+                if (initInput) p.initiative = initInput.value; 
+
+                const condInput = document.getElementById(`cond-${currentCombat.id}-${p.id}`);
+                if (condInput) p.conditions = condInput.value;
+
+                const slotInput = document.getElementById(`slots-${currentCombat.id}-${p.id}`);
+                if (slotInput) p.slots = slotInput.value;
+            });
+        }
+
+        function toggleStats(id) {
+            if (!currentCombat) return;
+            const p = currentCombat.participants.find(x => x.id === id);
+            if (p) p.statsExpanded = !p.statsExpanded;
+            
+            const el = document.getElementById(`stats-${currentCombat.id}-${id}`);
+            if(el) el.classList.toggle('hidden');
+        }
+
+        function renderCombatTracker() {
+            if (!currentCombat) return;
+
+            const container = document.getElementById('tracker-' + currentCombat.id);
+            
+            let html = `
+                <div class="flex justify-between items-center mb-4 bg-gray-800 text-white p-3 rounded">
+                    <h3 class="text-xl font-bold">${escapeHTML(encounters[currentCombat.id].title)} - Round ${currentCombat.round || 0}</h3>
+                    <div class="space-x-2">
+                        <button onclick="rollMonsterInit()" class="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded text-sm">🎲 Roll Monsters</button>
+                        <button onclick="sortInitiative()" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Sort Turns</button>
+                        <button onclick="nextTurn()" class="bg-green-600 hover:bg-green-700 px-4 py-1 rounded font-bold shadow">Next Turn ➡️</button>
+                    </div>
+                </div>
+
+                <div class="combat-container border border-gray-300 rounded">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead class="bg-gray-100 sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th class="p-2 w-16 text-center">Init</th>
+                                <th class="p-2">Name</th>
+                                <th class="p-2 w-12 text-center">AC</th>
+                                <th class="p-2 w-48 text-center">HP (Dmg/Heal)</th>
+                                <th class="p-2 w-1/4">Conditions / Notes</th>
+                                <th class="p-2 w-1/4">Spell Slots / Uses</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            currentCombat.participants.forEach((p, index) => {
+                const isActive = index === currentCombat.turnIndex ? 'active-turn' : '';
+                const isDead = p.hp <= 0 ? 'opacity-50 bg-red-50' : '';
+                const colorClass = p.type === 'pc' ? 'text-blue-800 font-bold' : 'text-red-800 font-bold';
+                const safeName = escapeHTML(p.currentName);
+
+                html += `
+                    <tr id="row-${currentCombat.id}-${p.id}" class="tracker-row bg-white hover:bg-gray-50 ${isActive} ${isDead}">
+                        <td class="p-2 border-b">
+                            <input type="number" id="init-${currentCombat.id}-${p.id}" class="w-12 p-1 border rounded text-center" onchange="saveInputState()">
+                        </td>
+                        <td class="p-2 border-b">
+                            <div class="${colorClass} flex items-center justify-between">
+                                <span style="word-break: break-word; padding-right: 8px;">${safeName}</span>
+                                ${p.type === 'monster' ? `<button onclick="toggleStats('${p.id}')" class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300 flex-shrink-0">Stats</button>` : ''}
+                            </div>
+                        </td>
+                        <td class="p-2 border-b text-center font-bold text-lg">${p.ac}</td>
+                        <td class="p-2 border-b">
+                            <div class="flex items-center justify-between">
+                                <span id="hp-text-${currentCombat.id}-${p.id}" class="font-bold w-12 text-center flex-shrink-0">${p.hp} / ${p.maxHp}</span>
+                                <div class="flex items-center space-x-1">
+                                    <button onclick="modifyHp('${p.id}', -1)" class="bg-red-200 text-red-800 w-6 h-6 rounded flex items-center justify-center font-bold hover:bg-red-300 flex-shrink-0">-</button>
+                                    <button onclick="modifyHp('${p.id}', 1)" class="bg-green-200 text-green-800 w-6 h-6 rounded flex items-center justify-center font-bold hover:bg-green-300 flex-shrink-0">+</button>
+                                    <input type="number" id="hp-input-${currentCombat.id}-${p.id}" class="w-12 p-1 border rounded text-center ml-1" placeholder="val" onkeydown="if(event.key === 'Enter') customDamageHeal('${p.id}')">
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-2 border-b">
+                            <input type="text" id="cond-${currentCombat.id}-${p.id}" class="w-full p-1 border rounded text-xs" placeholder="Poisoned, Prone..." onchange="saveInputState()">
+                        </td>
+                        <td class="p-2 border-b">
+                            <input type="text" id="slots-${currentCombat.id}-${p.id}" class="w-full p-1 border rounded text-xs" placeholder="${p.type === 'pc' ? 'L1: O O O, L2: O' : 'Uses left...'}" onchange="saveInputState()">
+                        </td>
+                    </tr>
+                `;
+
+                if (p.type === 'monster') {
+                    const hiddenClass = p.statsExpanded ? '' : 'hidden';
+                    html += `
+                        <tr id="stats-${currentCombat.id}-${p.id}" class="${hiddenClass} bg-yellow-50">
+                            <td colspan="6" class="p-4 border-b text-xs border-l-4 border-yellow-400 text-gray-800">
+                                ${p.stats}
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = html;
+
+            // Safe Post-Render Data Injection
+            currentCombat.participants.forEach(p => {
+                const initInput = document.getElementById(`init-${currentCombat.id}-${p.id}`);
+                if (initInput) initInput.value = p.initiative !== undefined ? p.initiative : '';
+
+                const condInput = document.getElementById(`cond-${currentCombat.id}-${p.id}`);
+                if (condInput) condInput.value = p.conditions || '';
+
+                const slotInput = document.getElementById(`slots-${currentCombat.id}-${p.id}`);
+                if (slotInput) slotInput.value = p.slots || '';
+            });
+        }
+
+        renderParty();
+
+    </script>
+</body>
+</html>
