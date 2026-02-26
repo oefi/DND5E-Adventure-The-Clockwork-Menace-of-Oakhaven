@@ -55,6 +55,7 @@
         .combat-container {
             max-height: 80vh;
             overflow-y: auto;
+            overflow-x: auto; /* Added horizontal scrolling for mobile/tablet */
         }
     </style>
 </head>
@@ -62,12 +63,12 @@
 
     <!-- Header -->
     <header class="bg-[#5c1a06] text-[#fdfbf7] py-6 shadow-md border-b-4 border-[#d4af37]">
-        <div class="max-w-5xl mx-auto px-4 flex justify-between items-center">
-            <div>
+        <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="text-center sm:text-left">
                 <h1 class="text-3xl font-bold text-[#fdfbf7]">The Clockwork Menace of Oakhaven</h1>
                 <p class="text-sm opacity-80 mt-1 font-sans">A 5E (2024) One-Shot for Level 3 Characters (~3 Hours)</p>
             </div>
-            <button onclick="togglePartyManager()" class="bg-[#d4af37] text-[#5c1a06] px-4 py-2 rounded font-bold shadow hover:bg-[#b8952d] transition">
+            <button onclick="togglePartyManager()" class="bg-[#d4af37] text-[#5c1a06] px-4 py-2 rounded font-bold shadow hover:bg-[#b8952d] transition w-full sm:w-auto">
                 Manage Party
             </button>
         </div>
@@ -84,7 +85,7 @@
                 <p class="text-sm text-gray-600 mb-4 font-sans">Add your players here. They will be dynamically imported into active combat encounters.</p>
                 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse font-sans mb-4">
+                    <table class="w-full text-left border-collapse font-sans mb-4 min-w-[600px]">
                         <thead>
                             <tr class="bg-gray-100">
                                 <th class="p-2 border">Character Name</th>
@@ -100,12 +101,12 @@
                     </table>
                 </div>
                 
-                <div class="flex gap-2 font-sans">
-                    <input type="text" id="new-pc-name" placeholder="Name" class="border p-2 rounded flex-grow">
-                    <input type="number" id="new-pc-ac" placeholder="AC" class="border p-2 rounded w-20" min="1">
-                    <input type="number" id="new-pc-hp" placeholder="Max HP" class="border p-2 rounded w-24" min="1">
-                    <input type="number" id="new-pc-init" placeholder="Init (+)" class="border p-2 rounded w-20">
-                    <button onclick="addPartyMember()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add PC</button>
+                <div class="flex flex-col sm:flex-row flex-wrap gap-2 font-sans mt-4">
+                    <input type="text" id="new-pc-name" placeholder="Name" class="border p-2 rounded flex-grow min-w-[150px]">
+                    <input type="number" id="new-pc-ac" placeholder="AC" class="border p-2 rounded w-full sm:w-20" min="1">
+                    <input type="number" id="new-pc-hp" placeholder="Max HP" class="border p-2 rounded w-full sm:w-24" min="1">
+                    <input type="number" id="new-pc-init" placeholder="Init (+)" class="border p-2 rounded w-full sm:w-20">
+                    <button onclick="addPartyMember()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto font-semibold">Add PC</button>
                 </div>
             </section>
 
@@ -541,17 +542,17 @@
             const container = document.getElementById('tracker-' + currentCombat.id);
             
             let html = `
-                <div class="flex justify-between items-center mb-4 bg-gray-800 text-white p-3 rounded">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 bg-gray-800 text-white p-3 rounded">
                     <h3 class="text-xl font-bold">${escapeHTML(encounters[currentCombat.id].title)} - Round ${currentCombat.round || 0}</h3>
-                    <div class="space-x-2">
-                        <button onclick="rollMonsterInit()" class="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded text-sm">🎲 Roll Monsters</button>
-                        <button onclick="sortInitiative()" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Sort Turns</button>
-                        <button onclick="nextTurn()" class="bg-green-600 hover:bg-green-700 px-4 py-1 rounded font-bold shadow">Next Turn ➡️</button>
+                    <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                        <button onclick="rollMonsterInit()" class="bg-purple-600 hover:bg-purple-700 px-3 py-1.5 rounded text-sm flex-grow md:flex-grow-0 font-semibold shadow-sm transition-colors">🎲 Roll Monsters</button>
+                        <button onclick="sortInitiative()" class="bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded text-sm flex-grow md:flex-grow-0 font-semibold shadow-sm transition-colors">Sort Turns</button>
+                        <button onclick="nextTurn()" class="bg-green-600 hover:bg-green-700 px-4 py-1.5 rounded font-bold shadow flex-grow md:flex-grow-0 transition-colors">Next Turn ➡️</button>
                     </div>
                 </div>
 
-                <div class="combat-container border border-gray-300 rounded">
-                    <table class="w-full text-left border-collapse text-sm">
+                <div class="combat-container border border-gray-300 rounded shadow-sm relative">
+                    <table class="w-full text-left border-collapse text-sm min-w-[850px]">
                         <thead class="bg-gray-100 sticky top-0 z-10 shadow-sm">
                             <tr>
                                 <th class="p-2 w-16 text-center">Init</th>
