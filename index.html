@@ -325,7 +325,14 @@
                 encounterStates: encounterStates,
                 activeEncounterId: currentCombat ? currentCombat.id : null
             };
-            localStorage.setItem('oakhavenSaveData', JSON.stringify(dataToSave));
+            
+            // BUGFIX: Wrap in try/catch to prevent hard crashes if the DM is using 
+            // strict Private Browsing rules that block Local Storage writes.
+            try {
+                localStorage.setItem('oakhavenSaveData', JSON.stringify(dataToSave));
+            } catch (e) {
+                console.warn("Storage quota exceeded or private browsing active. Data not saved to disk.", e);
+            }
         }
 
         function loadData() {
@@ -486,17 +493,29 @@
                 // Resume previously started encounter
                 currentCombat = encounterStates[encounterId];
                 
-                // Re-sync PCs from the global array in case they took damage in a different encounter!
-                currentCombat.participants.forEach(p => {
-                    if (p.type === 'pc') {
-                        const globalPc = party.find(member => member.id === p.id);
-                        if (globalPc) {
-                            p.hp = globalPc.hp;
-                            p.conditions = globalPc.conditions;
-                            p.slots = globalPc.slots;
-                        }
+                // CRITICAL RECONCILIATION: Update the cached encounter's PC roster to exactly match 
+                // the LIVE global party array. (Handles PCs added or removed while playing another encounter!)
+                const monsters = currentCombat.participants.filter(p => p.type === 'monster');
+                const reconciledPCs = party.map(globalPc => {
+                    const existingPc = currentCombat.participants.find(p => p.id === globalPc.id);
+                    if (existingPc) {
+                        return {
+                            ...globalPc,
+                            initiative: existingPc.initiative, // Retain specific encounter initiative
+                            hp: globalPc.hp,                   // Pull latest health
+                            conditions: globalPc.conditions,   // Pull latest conditions
+                            slots: globalPc.slots              // Pull latest slots
+                        };
+                    } else {
+                        // A brand new PC was added via Party Manager while this encounter was sleeping
+                        return {
+                            ...globalPc,
+                            initiative: '' // Needs a fresh roll
+                        };
                     }
                 });
+                
+                currentCombat.participants = [...reconciledPCs, ...monsters];
                 
             } else {
                 // Generate a fresh encounter
